@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Chatbot de Productos</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; background: #f4f4f9; }
+    #chatbox { max-width: 500px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px #ccc;}
+    .message { margin: 10px 0; }
+    .bot { color: #333; }
+    .user { color: blue; text-align: right; }
+    button { margin-top: 10px; padding: 10px; border: none; background: #007bff; color: white; border-radius: 5px; cursor: pointer;}
+    button:hover { background: #0056b3; }
+  </style>
+</head>
+<body>
+
+  <div id="chatbox">
+    <div class="message bot" id="botMessage">¡Hola! Soy tu asistente virtual. ¿En qué puedo ayudarte?</div>
+    <div id="options"></div>
+  </div>
+
+  <script>
+    const chatbox = document.getElementById('chatbox');
+    const botMessage = document.getElementById('botMessage');
+    const optionsDiv = document.getElementById('options');
+
+    // Definimos las opciones y respuestas
+    const chatFlow = {
+      start: {
+        message: "¿Qué te gustaría conocer?",
+        options: [
+          { text: "Productos", next: "productos" },
+          { text: "Propuesta del proyecto", next: "propuesta" },
+          { text: "Contacto", next: "contacto" }
+        ]
+      },
+      productos: {
+        message: "Tenemos estos productos: \n1. Producto A\n2. Producto B\n3. Producto C\n¿Quieres saber más sobre alguno?",
+        options: [
+          { text: "Producto A", next: "productoA" },
+          { text: "Producto B", next: "productoB" },
+          { text: "Producto C", next: "productoC" },
+          { text: "Volver", next: "start" }
+        ]
+      },
+      productoA: {
+        message: "Producto A es un dispositivo innovador que ... ¿Quieres regresar al inicio?",
+        options: [
+          { text: "Sí, volver al inicio", next: "start" }
+        ]
+      },
+      productoB: {
+        message: "Producto B ofrece soluciones para ... ¿Quieres regresar al inicio?",
+        options: [
+          { text: "Sí, volver al inicio", next: "start" }
+        ]
+      },
+      productoC: {
+        message: "Producto C es ideal para ... ¿Quieres regresar al inicio?",
+        options: [
+          { text: "Sí, volver al inicio", next: "start" }
+        ]
+      },
+      propuesta: {
+        message: "Nuestra propuesta de proyecto consiste en ofrecer ... ¿Quieres más detalles o volver al inicio?",
+        options: [
+          { text: "Más detalles", next: "detallesPropuesta" },
+          { text: "Volver", next: "start" }
+        ]
+      },
+      detallesPropuesta: {
+        message: "Detalles específicos de la propuesta: ... ¿Volver al inicio?",
+        options: [
+          { text: "Sí", next: "start" }
+        ]
+      },
+      contacto: {
+        message: "Puedes contactarnos en: contacto@empresa.com o al teléfono 123-456-7890. ¿Quieres volver al inicio?",
+        options: [
+          { text: "Sí, volver al inicio", next: "start" }
+        ]
+      }
+    };
+
+    function showOptions(options) {
+      optionsDiv.innerHTML = '';
+      options.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.textContent = opt.text;
+        btn.onclick = () => selectOption(opt.next, opt.text);
+        optionsDiv.appendChild(btn);
+      });
+    }
+
+    function selectOption(next, userText) {
+      // Mostrar la respuesta del usuario
+      const userMessage = document.createElement('div');
+      userMessage.className = 'message user';
+      userMessage.textContent = userText;
+      chatbox.insertBefore(userMessage, optionsDiv);
+
+      // Actualizar mensaje del bot
+      const botData = chatFlow[next];
+      botMessage.textContent = botData.message;
+
+      // Mostrar opciones nuevas
+      showOptions(botData.options);
+    }
+
+    // Inicializamos con la primera interacción
+    selectOption('start', '');
+  </script>
+</body>
+</html>
